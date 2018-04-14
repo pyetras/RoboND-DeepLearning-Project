@@ -15,15 +15,15 @@
 
 # modified by Devin Anzelmo 2017
 
-from tensorflow.contrib.keras.python.keras import activations
-from tensorflow.contrib.keras.python.keras import backend as K
-from tensorflow.contrib.keras.python.keras import constraints
-from tensorflow.contrib.keras.python.keras import initializers
-from tensorflow.contrib.keras.python.keras import regularizers
-from tensorflow.contrib.keras.python.keras.engine import InputSpec
-from tensorflow.contrib.keras.python.keras.engine import Layer
-from tensorflow.contrib.keras.python.keras.utils.generic_utils import get_custom_objects 
-from tensorflow.contrib.keras.python.keras.utils import conv_utils
+from tensorflow.python.keras import activations
+from tensorflow.python.keras import backend as K
+from tensorflow.python.keras import constraints
+from tensorflow.python.keras import initializers
+from tensorflow.python.keras import regularizers
+from tensorflow.python.keras.layers import InputSpec
+from tensorflow.python.keras.layers import Layer
+from tensorflow.python.keras.utils import get_custom_objects
+from tensorflow.python.layers import utils as conv_utils
 
 from tensorflow.python.layers import base
 from tensorflow.python.layers import utils
@@ -610,7 +610,10 @@ class BilinearUpSampling2D(Layer):
 
   def __init__(self, size=(2, 2), data_format=None, **kwargs):
     super(BilinearUpSampling2D, self).__init__(**kwargs)
-    self.data_format = conv_utils.normalize_data_format(data_format)
+    if data_format is None:
+      self.data_format = K.image_data_format()
+    else:
+      self.data_format = conv_utils.normalize_data_format(data_format)
     self.size = conv_utils.normalize_tuple(size, 2, 'size')
     self.input_spec = InputSpec(ndim=4)
 
